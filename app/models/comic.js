@@ -31,7 +31,8 @@ const Comic = db.define('comic', {
 
 Comic.hasMany(Chapter, {as: 'Issues'});
 
-Chapter.sync({ force: true });
+// Chapter.sync({ force: true });
+Chapter.sync();
 // Comic.sync({ force: true });
 Comic.sync();
 

@@ -100,6 +100,17 @@ router.get('/comics',
     return res.json(comics);
   });
 
+router.get('/chapters/:comic',
+  async (req, res) => {
+    const comic = await Comic.findOne({
+      where: {
+        slug: req.params.comic,
+      },
+    });
+    const chapters = await comic.getIssues();
+    return res.json(chapters);
+  });
+
 router.post('/comics',
   // isLoggedIn,
   (req, res) => {

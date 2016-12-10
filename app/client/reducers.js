@@ -17,6 +17,13 @@ const comics = (state = [], action) => {
   return state;
 };
 
+const chapters = (state = [], action) => {
+  if (action.type === ActionTypes.CHAPTERS_SUCCESS) {
+    return action.response;
+  }
+  return state;
+};
+
 const login = (state = { loggedIn: false }, action) => {
   // if (action.type === ActionTypes.LOGIN_REQUEST) {
   // }
@@ -32,6 +39,7 @@ const rootReducer = combineReducers({
   login,
   users,
   comics,
+  chapters,
   form,
   routing,
 });
