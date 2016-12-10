@@ -12,11 +12,11 @@ TBD
 
 #### Requirements
 
-** System requirements: **
+**System requirements:**
 
 `node`@6 or later
 
-** Global node modules: **
+**Global node modules:**
 
 `$ npm install -g gulp-cli`
 
