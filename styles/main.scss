@@ -1,0 +1,58 @@
+@import 'normalize';
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #f7f7f7;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.header {
+  ul {
+    list-style: none;
+  }
+  li {
+    display: inline-block;
+  }
+}
+
+.login-page {
+  width: 500px;
+  max-width: 80%;
+  margin: auto;
+}
+
+// .container {
+//   max-width: 768px;
+//   margin: auto;
+//   padding: 0 10px;
+// }
+
+button {
+  display: block;
+  color: white;
+  background: #2196f3;
+  border: none;
+  padding: 8px;
+  border-radius: 3px;
+  margin-bottom: 16px;
+}
+
+input {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: inline-block;
+  font-size: 21px;
+  color: #797575;
+  margin-bottom: 8px;
+}
+
+@import 'reader';
+@import 'home';

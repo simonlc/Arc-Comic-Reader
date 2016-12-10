@@ -1,0 +1,5 @@
+node_modules/
+public/
+*.sqlite
+app/uploads/
+.DS_Store

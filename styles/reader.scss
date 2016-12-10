@@ -1,0 +1,12 @@
+.reader-book {
+  background: black;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reader-page {
+  max-width: 50%;
+  // max-height: 100vh;
+  touch-action: manipulation;
+}
