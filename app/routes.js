@@ -158,7 +158,8 @@ router.post('/comics',
         // TODO Normalize sequence, start with 0.jpg not 1
         const ext = path.extname(file);
         const name = path.basename(file, ext);
-        const match = name.match(/\d+$/);
+        // Find the last match of /\d+/
+        const match = name.match(/\d+(?!.*\d+)/);
         if (match === null) {
           await unlink(path.join(dir, file));
         } else {
