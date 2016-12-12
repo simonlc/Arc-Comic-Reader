@@ -29,4 +29,14 @@ This could possibly be fixed by first trying to only parse numbers with leading 
 
 ## Unsupported
 
-- Zero indexing of files. If a image collection starts at 1 rather than 0, the unzipper should shift the file names to be zero indexed.
+#### Zero indexing of files
+
+If a image collection starts at 1 rather than 0, the unzipper should shift the file names to be zero indexed.
+
+#### Multiple indexes in one name
+
+A case where a multipage layout or spread will include multiple indexes in the file name.
+
+Example:
+
+`comic-name_004_005m.jpg`
