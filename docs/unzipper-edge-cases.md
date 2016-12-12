@@ -7,7 +7,8 @@ This is an ongoing doc to help design a unzipper that can correctly handle many 
 ## Supported
 
 #### Append letter(s) naming conventions
-Sometimes filenames will append a letter to signify a special case, such as a multi-page layout, or the cover page.
+
+Sometimes filenames will append a letter to signify a special case, such as a multi-page layout, or the cover page. In our case, these are ignored.
 
 Example:
 `comic-name_001f.jpg`
@@ -16,7 +17,21 @@ Example:
 
 Numbers with leading zeros are normalized to not included any.
 
+#### Zero indexing of files
+
+If a image collection starts at 1 rather than 0, the unzipper should shift the file names to be zero indexed.
+
 ## Partially supported (need improvements)
+
+#### Multiple indexes in one name
+
+A case where a multipage layout or spread will include multiple indexes in the file name.
+
+Example:
+
+`comic-name_004_005m.jpg`
+
+This is fixed by closing gaps in the names. It does not take into account the first page number in the name, and renames all the files to be sequential again.
 
 #### Throwing out non indexed files
 
@@ -27,23 +42,6 @@ Example:
 
 This could possibly be fixed by first trying to only parse numbers with leading zeros to test the naming convention.
 
-## Unsupported
+## Unsupported (no implemtation yet)
 
-#### Zero indexing of files
-
-If a image collection starts at 1 rather than 0, the unzipper should shift the file names to be zero indexed.
-
-#### Multiple indexes in one name
-
-A case where a multipage layout or spread will include multiple indexes in the file name.
-
-Example:
-
-`comic-name_004_005m.jpg`
-
-NOTE: Gaps in sequences can basically be renamed using tetris's naive gravity algorithm.
-
- 1. check for gaps, increment counter
- 2. regular files are shifted down by ammount of counter
-
-If we use this case for 1 indexed sequences we can just start our counter at 1, rather than zero and do both cases in one opperation
+If there is an unsupported feature, please add an [issue](https://github.com/simonlc/Arc-Comic-Reader/issues/new), or a project task in the backlog.

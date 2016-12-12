@@ -4,7 +4,7 @@ import os from 'os';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
-import P from 'bluebird';
+import { promisify } from 'bluebird';
 import { Router } from 'express';
 import { IncomingForm } from 'formidable';
 import { unpack } from 'unpack-all';
@@ -16,7 +16,7 @@ import Comic, { Chapter } from './models/comic';
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-const unpackPromise = P.promisify(unpack);
+const unpackPromise = promisify(unpack);
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
@@ -139,7 +139,7 @@ router.post('/comics',
       const id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
       const dir = path.join(form.uploadDir, id);
 
-      // Simplify these and only look down one level
+      // TODO Simplify these and only look down one level
       const cmd = `find ${dir} -type f -exec mv {} ${dir} \\;`;
       const cmd2 = `find ${dir} -depth -exec rmdir {} \\;`;
 
@@ -154,28 +154,47 @@ router.post('/comics',
       await exec(cmd);
       await exec(cmd2);
       const files = await readdir(dir);
-      await Promise.all(files.map(async file => {
-        // TODO Normalize sequence, start with 0.jpg not 1
+
+      // Remove any file with no index and rename file
+      let cleanedFiles = await Promise.all(files.map(async file => {
         const ext = path.extname(file);
         const name = path.basename(file, ext);
         // Find the last match of /\d+/
         const match = name.match(/\d+(?!.*\d+)/);
         if (match === null) {
           await unlink(path.join(dir, file));
+          return false;
         } else {
-          const pageNumber = parseInt(match[0], 10) + ext;
+          const pageNumber = parseInt(match[0], 10);
           await chmod(path.join(dir, file), 0o640);
           await rename(
             path.join(dir, file),
-            path.join(dir, pageNumber),
+            path.join(dir, pageNumber + ext),
           );
+          return { name: pageNumber, ext };
         }
       }));
+      cleanedFiles = cleanedFiles.filter(item => item);
+      cleanedFiles.sort((a, b) => a.name - b.name);
 
-      // TODO Error if we have a gap in the sequence from 0 to n
+      // Remove gaps in sequence and start from 0 not 1
+      // NOTE: This needs to be done in series
+      let index = 0;
+      for (const file of cleanedFiles) {
+        const { name, ext } = file;
+        if (name === index) return;
+        const gap = index - name
+        const newName = name + gap;
+        await rename(
+          path.join(dir, name + ext),
+          path.join(dir, newName + ext),
+        );
+        index++;
+      }
 
       await unlink(zip.path);
 
+      // Add comic to DB
       const pages = files.length;
       const slug = slugify(formFields.title);
       try {
