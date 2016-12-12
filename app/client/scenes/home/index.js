@@ -19,11 +19,6 @@ const Section = ({ comics, title }) =>
   </div>
 
 export class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
   componentWillMount() {
     // XXX This feels ugly
     this.props.loadComics();

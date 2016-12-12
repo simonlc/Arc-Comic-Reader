@@ -3,11 +3,6 @@ import { connect } from 'react-redux';
 import { loadChapters } from './actions';
 
 export class Chapters extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
   componentWillMount() {
     // XXX This feels ugly
     this.props.loadChapters(this.props.params.comic);
