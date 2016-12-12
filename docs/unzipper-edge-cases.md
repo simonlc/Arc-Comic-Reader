@@ -40,3 +40,10 @@ A case where a multipage layout or spread will include multiple indexes in the f
 Example:
 
 `comic-name_004_005m.jpg`
+
+NOTE: Gaps in sequences can basically be renamed using tetris's naive gravity algorithm.
+
+ 1. check for gaps, increment counter
+ 2. regular files are shifted down by ammount of counter
+
+If we use this case for 1 indexed sequences we can just start our counter at 1, rather than zero and do both cases in one opperation
