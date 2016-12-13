@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadChapters } from './actions';
+import { loadChapters, setComic } from './actions';
+import { Link } from 'react-router';
 
 export class Chapters extends Component {
   componentWillMount() {
@@ -8,15 +9,22 @@ export class Chapters extends Component {
     this.props.loadChapters(this.props.params.comic);
   }
   render() {
+    const { setComic, params, chapters } = this.props;
     return (
       <div className="section">
-        <h2>{this.props.params.comic}</h2>
+        <h2>{params.comic}</h2>
         <div className="card-row">
-          {this.props.chapters.map((chapter, i) => {
+          {chapters.map((chapter, i) => {
             return (
-              <div className="card" key={i}>
-                <img src={`/${chapter.key}/0.jpg`} />
-              </div>
+              <Link
+                key={i}
+                onClick={() => setComic(chapter)}
+                to={`/c/${params.comic}/${chapter.chapterNumber}`}
+              >
+                <div className="card">
+                  <img src={`/${chapter.key}/0.jpg`} />
+                </div>
+              </Link>
             );
           })}
         </div>
@@ -29,4 +37,5 @@ export default connect(state => ({
   chapters: state.chapters,
 }), {
   loadChapters,
+  setComic,
 })(Chapters);

@@ -15,3 +15,7 @@ const fetchChapters = comic => ({
 export const loadChapters = comic => (dispatch, getState) => {
   return dispatch(fetchChapters(comic));
 };
+
+export const setComic = issue => (dispatch, getState) => {
+  return dispatch({ type: types.COMIC_SET, issue });
+};

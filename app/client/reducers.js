@@ -17,6 +17,15 @@ const comics = (state = [], action) => {
   return state;
 };
 
+const comic = (state = {}, action) => {
+  if (action.type === ActionTypes.COMIC_SUCCESS) {
+    return action.response;
+  } else if (action.type === ActionTypes.COMIC_SET) {
+    return action.issue;
+  }
+  return state;
+};
+
 const chapters = (state = [], action) => {
   if (action.type === ActionTypes.CHAPTERS_SUCCESS) {
     return action.response;
@@ -39,6 +48,7 @@ const rootReducer = combineReducers({
   login,
   users,
   comics,
+  comic,
   chapters,
   form,
   routing,

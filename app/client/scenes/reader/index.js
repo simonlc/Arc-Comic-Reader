@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { loadComic } from './actions';
 
 // Centered cover on start ?
 // on each img load also get edge color, default black
@@ -35,7 +36,10 @@ export class Reader extends Component {
       y: 0,
     };
   }
-  componentDidMount = () => {
+  componentWillMount() {
+    this.props.loadComic(this.props.params.comic, this.props.params.issue);
+  }
+  componentDidMount() {
     // TODO Get comic.key from params in orm find by slug
     // Setup
     // window.scrollTo(0, 1);
@@ -46,8 +50,11 @@ export class Reader extends Component {
     addEventListener('keydown', this.handleKeyup);
     // addEventListener('touchmove', e => e.preventDefault());
   }
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     removeEventListener('keydown', this.handleKeyup);
+  }
+  componentDidUpdate() {
+    window.scrollTo(0, 0);
   }
   handleKeyup = (e) => {
     if ([39].includes(e.keyCode)) {
@@ -57,14 +64,11 @@ export class Reader extends Component {
       this.navigateBack();
     }
   }
-  componentDidUpdate = () => {
-    window.scrollTo(0, 0);
-  }
   navigateBack = () => {
-    const { comic } = this.props.params;
+    const { comic } = this.props;
     const { page, singlePage } = this.state;
-    const url = `/${comic}/${page - 2}.jpg`;
-    const url2 = `/${comic}/${page - 1}.jpg`;
+    const url = `/${comic.key}/${page - 2}.jpg`;
+    const url2 = `/${comic.key}/${page - 1}.jpg`;
     // TODO Because we are using promise all, we can never get the last
     // page if it is odd
     const images = [
@@ -83,15 +87,15 @@ export class Reader extends Component {
     });
   }
   navigateForward = () => {
-    const { comic } = this.props.params;
+    const { comic } = this.props;
     const { page, singlePage } = this.state;
 
-    let url = `/${comic}/${page + 2}.jpg`;
-    let url2 = `/${comic}/${page + 3}.jpg`;
+    let url = `/${comic.key}/${page + 2}.jpg`;
+    let url2 = `/${comic.key}/${page + 3}.jpg`;
 
     if (singlePage) {
-      url = `/${comic}/${page + 1}.jpg`;
-      url2 = `/${comic}/${page + 2}.jpg`;
+      url = `/${comic.key}/${page + 1}.jpg`;
+      url2 = `/${comic.key}/${page + 2}.jpg`;
     }
 
     // TODO Because we are using promise all, we can never get the last
@@ -118,22 +122,22 @@ export class Reader extends Component {
         this.setState({ singlePage: false, page: newPage });
       }
       // Lazy load //
-      let url = `/${comic}/${newPage + 2}.jpg`;
-      let url2 = `/${comic}/${newPage + 3}.jpg`;
+      let url = `/${comic.key}/${newPage + 2}.jpg`;
+      let url2 = `/${comic.key}/${newPage + 3}.jpg`;
 
       if (newSinglePage) {
-        url = `/${comic}/${newPage + 1}.jpg`;
-        url2 = `/${comic}/${newPage + 2}.jpg`;
+        url = `/${comic.key}/${newPage + 1}.jpg`;
+        url2 = `/${comic.key}/${newPage + 2}.jpg`;
       }
       loadImage(url);
       loadImage(url2);
     });
   }
   render() {
-    const { comic } = this.props.params;
+    const { comic } = this.props;
     const { page } = this.state;
-    const url = `/${comic}/${page}.jpg`;
-    const url2 = `/${comic}/${page + 1}.jpg`;
+    const url = `/${comic.key}/${page}.jpg`;
+    const url2 = `/${comic.key}/${page + 1}.jpg`;
     return (
       <div>
         {this.state.singlePage ?
@@ -152,4 +156,7 @@ export class Reader extends Component {
   }
 }
 
-export default connect()(Reader);
+export default connect(
+  state => ({ comic: state.comic }),
+  { loadComic },
+)(Reader);
